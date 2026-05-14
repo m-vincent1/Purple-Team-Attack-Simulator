@@ -1,112 +1,112 @@
 # Purple Team Attack Simulator
 
-[![CI](https://github.com/your-username/purple-team-attack-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/purple-team-attack-simulator/actions/workflows/ci.yml)
+[![CI](https://github.com/m-vincent1/Purple-Team-Attack-Simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/m-vincent1/Purple-Team-Attack-Simulator/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-green.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Licence: MIT](https://img.shields.io/badge/Licence-MIT-yellow.svg)](LICENSE)
 
-> Purple Team Attack Simulator is a local defensive cybersecurity lab designed to emulate controlled adversary-like behaviors through synthetic logs, validate detection rules, map results to MITRE ATT&CK, and generate SOC-ready reports.
-
----
-
-## Why this project matters
-
-Security teams need a safe way to validate whether their detection logic works before a real incident occurs. This project provides a controlled local environment to simulate attacker-like patterns, generate telemetry, validate detections, and report coverage gaps.
-
-**Use cases:**
-- Validate SIEM detection rules before deployment
-- Train SOC analysts with realistic log data
-- Run purple team exercises without touching production systems
-- Build a personal cybersecurity portfolio project
+> Purple Team Attack Simulator est un laboratoire de cybersécurité défensive local conçu pour simuler des comportements d'attaquants de manière contrôlée, générer des logs synthétiques réalistes, valider des règles de détection, mapper les résultats sur MITRE ATT&CK et produire des rapports de couverture prêts pour un SOC.
 
 ---
 
-## Safety-first design
+## Pourquoi ce projet ?
 
-This tool does not exploit systems, steal credentials, deploy malware, bypass security tools, or perform destructive actions. It generates **synthetic telemetry** for authorized defensive testing and education only.
+Les équipes de sécurité ont besoin d'un moyen sûr de valider si leur logique de détection fonctionne **avant** qu'un vrai incident ne survienne. Ce projet fournit un environnement local contrôlé pour simuler des comportements d'attaquants, générer de la télémétrie, valider les détections et identifier les lacunes de couverture.
 
-See [SAFETY.md](SAFETY.md) for full details.
+**Cas d'usage :**
+- Valider les règles SIEM avant déploiement
+- Former les analystes SOC avec des données de logs réalistes
+- Effectuer des exercices purple team sans toucher aux systèmes de production
+- Projet de portfolio en cybersécurité
 
 ---
 
-## Features
+## Conception orientée sécurité
 
-- **10 attack scenarios** covering Windows, Linux, Web, Network and Identity platforms
-- **Synthetic log generation** — realistic JSONL events, zero system impact
-- **YAML detection rules** with `contains`, `equals`, `regex`, `not_contains` matchers and `all/any` conditions
-- **MITRE ATT&CK mapping** for all scenarios and rules
-- **FastAPI REST backend** with automatic OpenAPI documentation
-- **Typer CLI** (`pts`) with list, run, validate, coverage, report, clean commands
-- **React/TypeScript dashboard** with 5 pages (Dashboard, Scenarios, Runs, Run Details, Coverage)
-- **HTML, Markdown and JSON reports** with Jinja2 templates
-- **Coverage calculator** — tracks which techniques are covered, not detected, or not tested
-- **Pytest test suite** — 25+ tests
-- **Docker Compose** for one-command deployment
-- **GitHub Actions CI** for automated testing and build validation
+Cet outil n'exploite pas de systèmes, ne vole pas d'identifiants, ne déploie pas de malware, ne contourne pas les outils de sécurité et n'effectue aucune action destructrice. Il génère uniquement de la **télémétrie synthétique** pour des tests défensifs autorisés et à des fins éducatives.
+
+Voir [SAFETY.md](SAFETY.md) pour les détails complets.
+
+---
+
+## Fonctionnalités
+
+- **10 scénarios d'attaque** couvrant Windows, Linux, Web, Réseau et Identité
+- **Génération de logs synthétiques** — événements JSONL réalistes, aucun impact système
+- **Règles de détection YAML** avec matchers `contains`, `equals`, `regex`, `not_contains` et conditions `all/any`
+- **Mapping MITRE ATT&CK** pour tous les scénarios et toutes les règles
+- **API REST FastAPI** avec documentation OpenAPI automatique
+- **CLI Typer** (`pts`) avec les commandes list, run, validate, coverage, report, clean
+- **Dashboard React/TypeScript** avec 5 pages (Tableau de bord, Scénarios, Exécutions, Détails, Couverture)
+- **Rapports HTML, Markdown et JSON** via templates Jinja2
+- **Calculateur de couverture** — suit quelles techniques sont couvertes, non détectées ou non testées
+- **Suite de tests Pytest** — 37 tests
+- **Docker Compose** pour un déploiement en une commande
+- **GitHub Actions CI** pour les tests et la validation du build
 
 ---
 
 ## Architecture
 
 ```
-CLI (pts)  ──→  FastAPI Backend  ──→  SQLite DB
-                     │
-              Services Layer
-         ┌────────────────────────┐
-         │ scenario_runner        │
-         │ synthetic_log_gen      │
-         │ detection_engine       │
-         │ report_generator       │
-         │ coverage_calculator    │
-         └────────────────────────┘
-                     │
-              YAML Files             React Frontend
-         scenarios/*.yml  ──→    Dashboard / Scenarios
-         rules/*.yml       ──→   Runs / Coverage / Reports
+CLI (pts)  ──→  Backend FastAPI  ──→  Base SQLite
+                      │
+               Couche Services
+        ┌─────────────────────────┐
+        │ scenario_runner         │
+        │ synthetic_log_generator │
+        │ detection_engine        │
+        │ report_generator        │
+        │ coverage_calculator     │
+        └─────────────────────────┘
+                      │
+               Fichiers YAML          Frontend React
+        scenarios/*.yml  ──→    Tableau de bord / Scénarios
+        rules/*.yml      ──→    Exécutions / Couverture / Rapports
 ```
 
-Full architecture: [docs/architecture.md](docs/architecture.md)
+Architecture complète : [docs/architecture.md](docs/architecture.md)
 
 ---
 
-## Stack
+## Stack technique
 
-| Layer | Technology |
+| Couche | Technologie |
 |---|---|
-| Backend API | Python 3.11, FastAPI, Uvicorn |
-| ORM / DB | SQLAlchemy 2.0, SQLite |
+| API Backend | Python 3.11, FastAPI, Uvicorn |
+| ORM / Base de données | SQLAlchemy 2.0, SQLite |
 | Validation | Pydantic v2 |
 | CLI | Typer + Rich |
-| Scenarios/Rules | PyYAML |
-| Reports | Jinja2 |
+| Scénarios / Règles | PyYAML |
+| Rapports | Jinja2 |
 | Tests | Pytest, HTTPX |
 | Frontend | React 18, TypeScript, Vite |
 | DevOps | Docker, Docker Compose, Makefile, GitHub Actions |
 
 ---
 
-## Local Installation
+## Installation locale
 
-### Prerequisites
+### Prérequis
 - Python 3.11+
 - Node.js 20+
 - pip
 
-### Setup
+### Installation rapide
 
 ```bash
-git clone https://github.com/your-username/purple-team-attack-simulator.git
-cd purple-team-attack-simulator
+git clone https://github.com/m-vincent1/Purple-Team-Attack-Simulator.git
+cd Purple-Team-Attack-Simulator
 
-# Install backend + frontend
+# Installer le backend + frontend
 make setup
 
-# Run the demo
+# Lancer la démo
 make demo
 ```
 
-### Backend only
+### Backend seul
 
 ```bash
 cd backend
@@ -119,206 +119,206 @@ pts list-scenarios
 ## Docker
 
 ```bash
-# Build and start both services
+# Construire et démarrer les deux services
 make docker-up
-# or:
+# ou :
 docker compose up --build
 ```
 
 | Service | URL |
 |---|---|
-| Backend API | http://localhost:8000 |
-| API Docs (Swagger) | http://localhost:8000/docs |
-| Frontend Dashboard | http://localhost:5173 |
+| API Backend | http://localhost:8000 |
+| Documentation API (Swagger) | http://localhost:8000/docs |
+| Dashboard Frontend | http://localhost:5173 |
 
 ---
 
-## CLI Usage (`pts`)
+## Utilisation de la CLI (`pts`)
 
 ```bash
-# List all available scenarios
+# Lister tous les scénarios disponibles
 pts list-scenarios
 
-# Show a specific scenario
+# Afficher un scénario spécifique
 pts show-scenario suspicious-powershell
 
-# Run a single scenario
+# Lancer un scénario
 pts run suspicious-powershell
 
-# Run all scenarios
+# Lancer tous les scénarios
 pts run-all
 
-# Validate detection results
+# Valider les résultats de détection
 pts validate latest
 pts validate 20260101-101530-suspicious-powershell
 
-# Check MITRE ATT&CK coverage
+# Vérifier la couverture MITRE ATT&CK
 pts coverage
 
-# Generate reports
+# Générer des rapports
 pts report latest --format html
 pts report latest --format md
 pts report latest --format json
 
-# Clean generated files
+# Nettoyer les fichiers générés
 pts clean
 
-# Start the API server
+# Démarrer le serveur API
 pts serve-api
 ```
 
-Example output:
+Exemple de sortie :
 ```
-✓ Scenario executed successfully
+✓ Scénario exécuté avec succès
   Run ID         : 20260101-101530-suspicious-powershell
-  Generated logs : 6 events
-  Log file       : generated_logs/20260101-101530-suspicious-powershell.jsonl
-  Alerts         : 1
-  Coverage       : covered
+  Logs générés   : 6 événements
+  Fichier log    : generated_logs/20260101-101530-suspicious-powershell.jsonl
+  Alertes        : 1
+  Couverture     : covered
 ```
 
 ---
 
-## API Usage
+## Utilisation de l'API
 
-Full reference: [docs/api_reference.md](docs/api_reference.md)
+Référence complète : [docs/api_reference.md](docs/api_reference.md)
 
 ```bash
-# List scenarios
+# Lister les scénarios
 curl http://localhost:8000/api/scenarios
 
-# Run a scenario
+# Lancer un scénario
 curl -X POST http://localhost:8000/api/scenarios/suspicious-powershell/run
 
-# Get coverage
+# Obtenir la couverture
 curl http://localhost:8000/api/coverage
 
-# Download HTML report
-curl http://localhost:8000/api/reports/{run_id}?format=html -o report.html
+# Télécharger un rapport HTML
+curl http://localhost:8000/api/reports/{run_id}?format=html -o rapport.html
 ```
 
 ---
 
 ## Dashboard
 
-The React dashboard provides:
-- **Dashboard**: KPIs, recent runs, alerts by severity, coverage overview
-- **Scenarios**: Table with Run button for each scenario
-- **Runs**: History of all simulation runs with status
-- **Run Details**: Timeline, alerts, validation, export links
-- **Coverage**: MITRE ATT&CK coverage matrix
+Le dashboard React propose :
+- **Tableau de bord** : KPIs, exécutions récentes, alertes par sévérité, vue d'ensemble de la couverture
+- **Scénarios** : tableau avec bouton Exécuter pour chaque scénario
+- **Exécutions** : historique de toutes les simulations avec statut
+- **Détails d'exécution** : timeline, alertes, validation, liens d'export
+- **Couverture** : matrice de couverture MITRE ATT&CK
 
 ---
 
-## Scenarios
+## Scénarios disponibles
 
-| ID | Platform | MITRE | Severity |
+| ID | Plateforme | MITRE | Sévérité |
 |---|---|---|---|
-| suspicious-powershell | Windows | T1059.001 | High |
-| ssh-bruteforce | Linux | T1110 | High |
-| new-admin-user | Windows | T1136 | High |
-| scheduled-task-creation | Windows | T1053 | Medium |
-| temp-process-execution | Windows | T1204 | High |
-| suspicious-curl-download | Linux | T1105 | High |
-| process-masquerading | Windows | T1036 | High |
-| abnormal-login-time | Identity | T1078 | Medium |
-| webshell-like-request | Web | T1505.003 | Critical |
-| dns-exfil-pattern | Network | T1048 | High |
+| suspicious-powershell | Windows | T1059.001 | Haute |
+| ssh-bruteforce | Linux | T1110 | Haute |
+| new-admin-user | Windows | T1136 | Haute |
+| scheduled-task-creation | Windows | T1053 | Moyenne |
+| temp-process-execution | Windows | T1204 | Haute |
+| suspicious-curl-download | Linux | T1105 | Haute |
+| process-masquerading | Windows | T1036 | Haute |
+| abnormal-login-time | Identité | T1078 | Moyenne |
+| webshell-like-request | Web | T1505.003 | Critique |
+| dns-exfil-pattern | Réseau | T1048 | Haute |
 
-Full catalog: [docs/scenarios_catalog.md](docs/scenarios_catalog.md)
-
----
-
-## Report Example
-
-Generated reports include:
-- Executive summary
-- Scenario details (platform, MITRE tactic/technique, severity)
-- Simulation result (run ID, timestamps, log count, alert count)
-- Detection logic (matched rule, fields, reason)
-- Event timeline table
-- Alert table
-- Defensive recommendations
-- Limitations notice
+Catalogue complet : [docs/scenarios_catalog.md](docs/scenarios_catalog.md)
 
 ---
 
-## MITRE ATT&CK Mapping
+## Exemple de rapport
 
-Full mapping: [docs/mitre_mapping.md](docs/mitre_mapping.md)
-
-Tactics covered: Execution, Persistence, Credential Access, Defense Evasion, Initial Access, Command and Control, Exfiltration
+Les rapports générés contiennent :
+- Résumé exécutif
+- Détails du scénario (plateforme, tactique/technique MITRE, sévérité)
+- Résultat de simulation (Run ID, horodatages, nombre de logs, alertes)
+- Logique de détection (règle matchée, champs, raison de l'alerte)
+- Timeline des événements
+- Tableau des alertes
+- Recommandations défensives
+- Avertissement de simulation synthétique
 
 ---
 
-## Security & Limits
+## Mapping MITRE ATT&CK
 
-- All simulations are **synthetic** — no real commands are executed
-- No network connections are made to external targets
-- No system files are modified
-- All generated artifacts are in `generated_logs/`, `generated_reports/`, `lab_sandbox/`
-- `pts clean` removes all generated files
+Mapping complet : [docs/mitre_mapping.md](docs/mitre_mapping.md)
 
-See [SAFETY.md](SAFETY.md) for the complete security policy.
+Tactiques couvertes : Exécution, Persistance, Accès aux identifiants, Évasion de défense, Accès initial, Commande et contrôle, Exfiltration
+
+---
+
+## Sécurité et limites
+
+- Toutes les simulations sont **synthétiques** — aucune commande réelle n'est exécutée
+- Aucune connexion réseau vers des cibles externes
+- Aucun fichier système n'est modifié
+- Tous les artefacts générés sont dans `generated_logs/`, `generated_reports/`, `lab_sandbox/`
+- `pts clean` supprime tous les fichiers générés
+
+Voir [SAFETY.md](SAFETY.md) pour la politique de sécurité complète.
 
 ---
 
 ## Tests
 
 ```bash
-# Run all tests
+# Lancer tous les tests
 make test
-# or:
+# ou :
 cd backend && python -m pytest tests/ -v
 ```
 
-Test coverage:
-- Scenario YAML loading and validation
-- Rule YAML loading and validation
-- Synthetic log generation for all 10 scenarios
-- Detection engine: positive detection for all 10 scenarios
-- Detection engine: no false positives on benign events
-- matcher logic (contains, equals, all/any conditions)
-- Scenario runner (DB records, JSONL files)
-- Report generation (HTML, Markdown, JSON)
-- Coverage calculation
-- API endpoints (health, scenarios, runs, validate, coverage)
+Couverture des tests :
+- Chargement et validation des scénarios YAML
+- Chargement et validation des règles YAML
+- Génération de logs synthétiques pour les 10 scénarios
+- Moteur de détection : détection positive pour les 10 scénarios
+- Moteur de détection : aucun faux positif sur événements bénins
+- Logique des matchers (contains, equals, conditions all/any)
+- Runner de scénarios (enregistrements DB, fichiers JSONL)
+- Génération de rapports (HTML, Markdown, JSON)
+- Calcul de couverture
+- Endpoints API (health, scenarios, runs, validate, coverage)
 
 ---
 
 ## Roadmap
 
-- [ ] Export rules in Sigma format
-- [ ] Integration connector for Elastic/OpenSearch
-- [ ] Splunk HTTP Event Collector (HEC) integration
-- [ ] Microsoft Sentinel analytics rule export
-- [ ] Import real authorized log files for testing
-- [ ] Visual MITRE ATT&CK matrix navigator
-- [ ] SOC maturity scoring across scenarios
-- [ ] Multi-environment profiles (cloud, OT, mobile)
-- [ ] Optional JWT authentication for dashboard
-- [ ] Additional scenarios: Living-off-the-Land, Kerberoasting patterns, Supply chain patterns
+- [ ] Export des règles au format Sigma
+- [ ] Connecteur pour Elastic/OpenSearch
+- [ ] Intégration Splunk HTTP Event Collector (HEC)
+- [ ] Export de règles analytiques Microsoft Sentinel
+- [ ] Import de fichiers de logs réels autorisés
+- [ ] Matrice MITRE ATT&CK visuelle
+- [ ] Scoring de maturité SOC
+- [ ] Profils multi-environnements (cloud, OT, mobile)
+- [ ] Authentification JWT optionnelle pour le dashboard
+- [ ] Scénarios supplémentaires : Living-off-the-Land, patterns Kerberoasting
 
 ---
 
 ## Documentation
 
-| File | Description |
+| Fichier | Description |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | System architecture and data flow |
-| [docs/demo_scenario.md](docs/demo_scenario.md) | Step-by-step walkthrough |
-| [docs/detection_logic.md](docs/detection_logic.md) | Rule format, matchers, conditions |
-| [docs/scenarios_catalog.md](docs/scenarios_catalog.md) | Full scenario catalog |
-| [docs/mitre_mapping.md](docs/mitre_mapping.md) | MITRE ATT&CK technique mapping |
-| [docs/api_reference.md](docs/api_reference.md) | REST API documentation |
-| [SAFETY.md](SAFETY.md) | Security policy and authorized use |
-| [SUIVI_PROJET.md](SUIVI_PROJET.md) | Project build journal |
+| [docs/architecture.md](docs/architecture.md) | Architecture système et flux de données |
+| [docs/demo_scenario.md](docs/demo_scenario.md) | Démonstration pas à pas |
+| [docs/detection_logic.md](docs/detection_logic.md) | Format des règles, matchers, conditions |
+| [docs/scenarios_catalog.md](docs/scenarios_catalog.md) | Catalogue complet des scénarios |
+| [docs/mitre_mapping.md](docs/mitre_mapping.md) | Mapping des techniques MITRE ATT&CK |
+| [docs/api_reference.md](docs/api_reference.md) | Documentation de l'API REST |
+| [SAFETY.md](SAFETY.md) | Politique de sécurité et usage autorisé |
+| [SUIVI_PROJET.md](SUIVI_PROJET.md) | Journal de construction du projet |
 
 ---
 
-## License
+## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT — voir [LICENSE](LICENSE).
 
-Designed for SOC training, purple team exercises, and defensive security education.
-**Authorized lab environments only.**
+Conçu pour la formation SOC, les exercices purple team et l'enseignement de la cybersécurité défensive.
+**Environnements de laboratoire autorisés uniquement.**

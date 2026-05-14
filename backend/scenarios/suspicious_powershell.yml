@@ -1,0 +1,22 @@
+id: suspicious-powershell
+name: Suspicious PowerShell Execution
+description: Simulates suspicious PowerShell command-line activity using synthetic Windows process logs.
+platform: windows
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1059.001
+  technique_name: PowerShell
+expected_detection: suspicious_powershell_rule
+log_profile:
+  source: windows_security
+  event_type: process_creation
+  event_id: 4688
+  host: WIN-LAB-01
+  user: lab.user
+simulation:
+  generate_events: 6
+  suspicious_events: 1
+  safe: true

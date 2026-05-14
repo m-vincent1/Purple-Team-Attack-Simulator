@@ -1,0 +1,22 @@
+id: process-masquerading
+name: Process Masquerading
+description: Simulates a process using a name similar to a legitimate Windows system process (typosquatting).
+platform: windows
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Defense Evasion
+  technique_id: T1036
+  technique_name: Masquerading
+expected_detection: process_masquerading_rule
+log_profile:
+  source: windows_security
+  event_type: process_creation
+  event_id: 4688
+  host: WIN-LAB-01
+  user: analyst
+simulation:
+  generate_events: 5
+  suspicious_events: 1
+  safe: true

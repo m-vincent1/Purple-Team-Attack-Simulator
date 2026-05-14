@@ -1,0 +1,21 @@
+id: ssh-bruteforce
+name: SSH Brute Force Pattern
+description: Simulates repeated SSH authentication failures from the same source IP, typical of a brute force attack pattern.
+platform: linux
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Credential Access
+  technique_id: T1110
+  technique_name: Brute Force
+expected_detection: ssh_bruteforce_rule
+log_profile:
+  source: linux_auth
+  event_type: auth_failure
+  host: ubuntu-lab
+  user: various
+simulation:
+  generate_events: 10
+  suspicious_events: 10
+  safe: true

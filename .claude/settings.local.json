@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(python3 -m pytest tests/ -v --tb=short)",
+      "PowerShell($pyExe = \"C:\\\\Users\\\\mathi\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe\"; Set-Location \"C:\\\\Users\\\\mathi\\\\OneDrive\\\\Documents\\\\Projet GITHUB\\\\Purple Team Attack Simulator\\\\backend\"; & $pyExe -m pytest tests/ -v --tb=short 2>&1)",
+      "PowerShell($py = \"C:\\\\Users\\\\mathi\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe\"; Set-Location \"C:\\\\Users\\\\mathi\\\\OneDrive\\\\Documents\\\\Projet GITHUB\\\\Purple Team Attack Simulator\\\\backend\"; & $py -m pytest tests/ -v --tb=short 2>&1)",
+      "PowerShell(Get-Process *)",
+      "PowerShell($handle = [System.IO.File]::Open\\(\"C:\\\\Users\\\\mathi\\\\.git\\\\index.lock\", \"Open\", \"ReadWrite\", \"None\"\\); $handle.Close\\(\\))",
+      "PowerShell(cmd /c \"del /f /q C:\\\\Users\\\\mathi\\\\.git\\\\index.lock\" 2>&1)"
+    ]
+  }
+}

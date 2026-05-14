@@ -1,0 +1,24 @@
+id: new_admin_user_rule
+name: New User Added to Administrators Group
+description: Detects addition of a new user to the local Administrators group.
+severity: high
+enabled: true
+mitre:
+  tactic: Persistence
+  technique_id: T1136
+  technique_name: Create Account
+logsource:
+  source: windows_security
+  event_type: group_member_added
+detection:
+  condition: all
+  fields:
+    event_type:
+      equals: group_member_added
+    command_line:
+      contains:
+        - administrators
+false_positives:
+  - Authorized IT operations
+  - System provisioning scripts
+recommendation: Alert on all group membership changes to privileged groups. Require change management approval for admin account creation.

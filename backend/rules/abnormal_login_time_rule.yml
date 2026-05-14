@@ -1,0 +1,24 @@
+id: abnormal_login_time_rule
+name: Off-Hours Authentication from External IP
+description: Detects successful authentication events occurring outside normal business hours from external IP addresses.
+severity: medium
+enabled: true
+mitre:
+  tactic: Initial Access
+  technique_id: T1078
+  technique_name: Valid Accounts
+logsource:
+  source: iam_logs
+  event_type: authentication_success
+detection:
+  condition: all
+  fields:
+    event_type:
+      equals: authentication_success
+    raw_message:
+      contains:
+        - "off-hours"
+false_positives:
+  - Authorized remote workers in different time zones
+  - On-call administrators
+recommendation: Implement conditional access policies based on login time and location. Configure MFA for all privileged account access.

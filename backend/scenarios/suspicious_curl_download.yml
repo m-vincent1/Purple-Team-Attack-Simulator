@@ -1,0 +1,21 @@
+id: suspicious-curl-download
+name: Suspicious Curl Download
+description: Simulates a curl command used to download and execute a remote script, a common C2 staging technique.
+platform: linux
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Command and Control
+  technique_id: T1105
+  technique_name: Ingress Tool Transfer
+expected_detection: suspicious_curl_rule
+log_profile:
+  source: linux_process
+  event_type: process_creation
+  host: ubuntu-lab
+  user: testuser
+simulation:
+  generate_events: 5
+  suspicious_events: 1
+  safe: true

@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pts-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////data/purple_team.db
+      - GENERATED_LOGS_DIR=/data/generated_logs
+      - GENERATED_REPORTS_DIR=/data/generated_reports
+      - LAB_SANDBOX_DIR=/data/lab_sandbox
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:80,http://frontend
+    volumes:
+      - pts-data:/data
+      - ./generated_logs:/data/generated_logs
+      - ./generated_reports:/data/generated_reports
+      - ./lab_sandbox:/data/lab_sandbox
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pts-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pts-data:

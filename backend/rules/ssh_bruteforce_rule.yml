@@ -1,0 +1,24 @@
+id: ssh_bruteforce_rule
+name: SSH Brute Force Authentication Failure Pattern
+description: Detects repeated SSH authentication failures indicating a brute force attack.
+severity: high
+enabled: true
+mitre:
+  tactic: Credential Access
+  technique_id: T1110
+  technique_name: Brute Force
+logsource:
+  source: linux_auth
+  event_type: auth_failure
+detection:
+  condition: all
+  fields:
+    event_type:
+      equals: auth_failure
+    raw_message:
+      contains:
+        - "Failed password"
+false_positives:
+  - Misconfigured automation
+  - Legitimate users who forgot credentials
+recommendation: Implement account lockout policies, deploy fail2ban, and monitor for geographic anomalies in authentication attempts.

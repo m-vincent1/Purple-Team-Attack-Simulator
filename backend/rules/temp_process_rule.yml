@@ -1,0 +1,24 @@
+id: temp_process_rule
+name: Process Execution from Temporary Directory
+description: Detects process execution from Windows temporary directories, a common malware staging technique.
+severity: high
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1204
+  technique_name: User Execution
+logsource:
+  source: windows_security
+  event_type: process_creation
+detection:
+  condition: any
+  fields:
+    command_line:
+      contains:
+        - "\\Windows\\Temp\\"
+        - "\\AppData\\Local\\Temp\\"
+        - "/tmp/"
+false_positives:
+  - Software installers
+  - Update processes using temp directories
+recommendation: Restrict execution permissions in temporary directories where possible. Alert on unsigned binaries executed from temp paths.

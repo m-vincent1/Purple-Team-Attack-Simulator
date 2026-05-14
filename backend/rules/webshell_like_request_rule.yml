@@ -1,0 +1,25 @@
+id: webshell_like_request_rule
+name: Webshell-like HTTP Request with Command Parameter
+description: Detects HTTP requests containing URL patterns consistent with webshell command execution.
+severity: critical
+enabled: true
+mitre:
+  tactic: Persistence
+  technique_id: T1505.003
+  technique_name: Web Shell
+logsource:
+  source: web_access
+  event_type: http_request
+detection:
+  condition: any
+  fields:
+    command_line:
+      contains:
+        - "?cmd="
+        - "?exec="
+        - "shell.php"
+        - "cmd.php"
+false_positives:
+  - Security scanner testing
+  - Authorized penetration testing
+recommendation: Implement web application firewall rules to block requests with command execution patterns. Regularly audit web server file uploads.

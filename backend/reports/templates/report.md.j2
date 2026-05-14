@@ -1,0 +1,100 @@
+# Purple Team Simulation Report
+
+**Generated:** {{ generated_at }}
+
+---
+
+## Executive Summary
+
+{% if scenario %}
+Scenario **{{ scenario.name }}** (ID: `{{ scenario.id }}`) was executed in synthetic mode.
+The simulation generated **{{ total_logs }} log events** and triggered **{{ total_alerts }} alert(s)**.
+Coverage status: **{{ coverage_status | upper }}**.
+{% else %}
+No scenario data available.
+{% endif %}
+
+---
+
+## Scenario Details
+
+| Field | Value |
+|---|---|
+| Scenario ID | `{{ scenario.id if scenario else 'N/A' }}` |
+| Name | {{ scenario.name if scenario else 'N/A' }} |
+| Platform | {{ scenario.platform if scenario else 'N/A' }} |
+| MITRE Tactic | {{ scenario.tactic if scenario else 'N/A' }} |
+| MITRE Technique | {{ scenario.technique_id if scenario else 'N/A' }} — {{ scenario.technique_name if scenario else '' }} |
+| Severity | {{ scenario.severity if scenario else 'N/A' }} |
+
+---
+
+## Simulation Result
+
+| Field | Value |
+|---|---|
+| Run ID | `{{ run.id }}` |
+| Start time | {{ run.started_at }} |
+| End time | {{ run.finished_at if run.finished_at else 'N/A' }} |
+| Generated logs | {{ total_logs }} |
+| Alerts generated | {{ total_alerts }} |
+| Detection status | **{{ coverage_status | upper }}** |
+
+---
+
+## Detection Logic
+
+{% if alerts %}
+{% for alert in alerts %}
+### Alert: {{ alert.title }}
+
+- **Rule ID:** `{{ alert.rule_id }}`
+- **Severity:** {{ alert.severity }}
+- **MITRE:** {{ alert.mitre_tactic }} / {{ alert.mitre_technique_id }}
+- **Reason:** {{ alert.reason }}
+
+{% endfor %}
+{% else %}
+No alerts were generated for this run.
+{% endif %}
+
+---
+
+## Timeline
+
+| # | Timestamp | Source | Event Type | Host | User |
+|---|---|---|---|---|---|
+{% for log in logs %}| {{ loop.index }} | {{ log.timestamp }} | {{ log.source }} | {{ log.event_type }} | {{ log.host }} | {{ log.user }} |
+{% endfor %}
+
+---
+
+## Alerts
+
+{% if alerts %}
+| # | Rule | Severity | Technique | Reason |
+|---|---|---|---|---|
+{% for alert in alerts %}| {{ loop.index }} | {{ alert.title }} | {{ alert.severity }} | {{ alert.mitre_technique_id }} | {{ alert.reason[:80] }}... |
+{% endfor %}
+{% else %}
+No alerts generated.
+{% endif %}
+
+---
+
+## Defensive Recommendations
+
+Based on this simulation, the following defensive measures are recommended:
+
+1. **Enable enhanced logging** for the relevant log sources to capture these events.
+2. **Deploy the detection rule** `{{ scenario.expected_detection if scenario else 'N/A' }}` in your SIEM.
+3. **Review alert tuning** to reduce false positives while maintaining detection coverage.
+4. **Conduct regular purple team exercises** to validate rule effectiveness over time.
+
+---
+
+## Limitations
+
+> **Important:** This report is based on **synthetic simulation only**. No real attack was executed.
+> All log events are artificially generated for detection testing purposes in an authorized lab environment.
+> This simulation does not represent a real threat to any production system.

@@ -1,0 +1,21 @@
+id: dns-exfil-pattern
+name: DNS Exfiltration Pattern
+description: Simulates DNS queries with unusually long subdomains containing base64-encoded data, indicative of DNS tunneling or exfiltration.
+platform: network
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Exfiltration
+  technique_id: T1048
+  technique_name: Exfiltration Over Alternative Protocol
+expected_detection: dns_exfil_pattern_rule
+log_profile:
+  source: dns_logs
+  event_type: dns_query
+  host: ubuntu-lab
+  user: "-"
+simulation:
+  generate_events: 8
+  suspicious_events: 1
+  safe: true

@@ -1,0 +1,24 @@
+id: scheduled_task_rule
+name: Suspicious Scheduled Task Creation
+description: Detects creation of a scheduled task via schtasks.exe, commonly used for persistence.
+severity: medium
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1053
+  technique_name: Scheduled Task/Job
+logsource:
+  source: windows_security
+  event_type: scheduled_task_created
+detection:
+  condition: all
+  fields:
+    event_type:
+      equals: scheduled_task_created
+    process_name:
+      contains:
+        - schtasks
+false_positives:
+  - Legitimate administrative scheduled tasks
+  - Software installation routines
+recommendation: Monitor all scheduled task creation events. Review task names, execution paths, and user context for anomalies.

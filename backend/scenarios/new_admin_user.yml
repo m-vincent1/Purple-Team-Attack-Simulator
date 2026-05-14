@@ -1,0 +1,22 @@
+id: new-admin-user
+name: New Admin User Created
+description: Simulates creation of a new privileged user account and addition to the Administrators group.
+platform: windows
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Persistence
+  technique_id: T1136
+  technique_name: Create Account
+expected_detection: new_admin_user_rule
+log_profile:
+  source: windows_security
+  event_type: user_created
+  event_id: 4720
+  host: WIN-LAB-01
+  user: SYSTEM
+simulation:
+  generate_events: 3
+  suspicious_events: 2
+  safe: true

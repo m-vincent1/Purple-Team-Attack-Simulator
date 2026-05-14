@@ -1,0 +1,22 @@
+id: scheduled-task-creation
+name: Scheduled Task Creation
+description: Simulates creation of a Windows scheduled task, commonly used for persistence and lateral execution.
+platform: windows
+mode: synthetic
+severity: medium
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1053
+  technique_name: Scheduled Task/Job
+expected_detection: scheduled_task_rule
+log_profile:
+  source: windows_security
+  event_type: scheduled_task_created
+  event_id: 4698
+  host: WIN-LAB-02
+  user: lab.user
+simulation:
+  generate_events: 4
+  suspicious_events: 1
+  safe: true

@@ -1,0 +1,24 @@
+id: suspicious_powershell_rule
+name: Suspicious PowerShell Encoded Command Pattern
+description: Detects synthetic PowerShell command lines containing suspicious encoded command indicators.
+severity: high
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1059.001
+  technique_name: PowerShell
+logsource:
+  source: windows_security
+  event_type: process_creation
+detection:
+  condition: any
+  fields:
+    command_line:
+      contains:
+        - "-enc"
+        - "EncodedCommand"
+        - "FromBase64String"
+false_positives:
+  - Administrative scripts
+  - Security testing tools
+recommendation: Review the parent process, user context and script origin. Enforce PowerShell logging and constrained language mode where appropriate.

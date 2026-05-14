@@ -1,0 +1,22 @@
+id: temp-process-execution
+name: Process Execution from Temp Directory
+description: Simulates execution of a process launched from a Windows temporary directory, a common indicator of malware staging.
+platform: windows
+mode: synthetic
+severity: high
+enabled: true
+mitre:
+  tactic: Execution
+  technique_id: T1204
+  technique_name: User Execution
+expected_detection: temp_process_rule
+log_profile:
+  source: windows_security
+  event_type: process_creation
+  event_id: 4688
+  host: WORKSTATION-42
+  user: lab.user
+simulation:
+  generate_events: 5
+  suspicious_events: 1
+  safe: true

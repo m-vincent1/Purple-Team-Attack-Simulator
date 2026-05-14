@@ -1,0 +1,21 @@
+id: webshell-like-request
+name: Webshell-like HTTP Request
+description: Simulates an HTTP request pattern consistent with webshell command execution via URL parameters.
+platform: web
+mode: synthetic
+severity: critical
+enabled: true
+mitre:
+  tactic: Persistence
+  technique_id: T1505.003
+  technique_name: Web Shell
+expected_detection: webshell_like_request_rule
+log_profile:
+  source: web_access
+  event_type: http_request
+  host: web-srv-01
+  user: "-"
+simulation:
+  generate_events: 6
+  suspicious_events: 1
+  safe: true

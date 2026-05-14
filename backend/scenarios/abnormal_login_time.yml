@@ -1,0 +1,21 @@
+id: abnormal-login-time
+name: Abnormal Login Time
+description: Simulates a successful authentication event outside normal business hours from an external IP address.
+platform: identity
+mode: synthetic
+severity: medium
+enabled: true
+mitre:
+  tactic: Initial Access
+  technique_id: T1078
+  technique_name: Valid Accounts
+expected_detection: abnormal_login_time_rule
+log_profile:
+  source: iam_logs
+  event_type: authentication_success
+  host: identity-provider
+  user: admin.lab
+simulation:
+  generate_events: 5
+  suspicious_events: 1
+  safe: true

@@ -1,0 +1,25 @@
+id: suspicious_curl_rule
+name: Suspicious Curl Download and Execute Pattern
+description: Detects curl commands used to download remote content and pipe to shell execution.
+severity: high
+enabled: true
+mitre:
+  tactic: Command and Control
+  technique_id: T1105
+  technique_name: Ingress Tool Transfer
+logsource:
+  source: linux_process
+  event_type: process_creation
+detection:
+  condition: all
+  fields:
+    process_name:
+      contains:
+        - curl
+    command_line:
+      contains:
+        - "/tmp/"
+false_positives:
+  - Authorized system administration scripts
+  - CI/CD pipeline operations
+recommendation: Monitor outbound HTTP connections from interactive sessions. Restrict curl usage via application whitelisting where feasible.

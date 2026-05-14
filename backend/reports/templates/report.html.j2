@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Purple Team Report — {{ scenario.name if scenario else run.id }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f6fa; color: #222; line-height: 1.6; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    header { background: #1e2a3a; color: #fff; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; }
+    header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    header p { color: #9ab; font-size: 0.9rem; }
+    .badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+    .badge-high { background: #fee2e2; color: #991b1b; }
+    .badge-medium { background: #fef3c7; color: #92400e; }
+    .badge-low { background: #d1fae5; color: #065f46; }
+    .badge-critical { background: #ede9fe; color: #5b21b6; }
+    .badge-covered { background: #d1fae5; color: #065f46; }
+    .badge-not_detected { background: #fee2e2; color: #991b1b; }
+    .badge-not_tested { background: #f3f4f6; color: #6b7280; }
+    .card { background: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .card h2 { font-size: 1.1rem; color: #1e2a3a; margin-bottom: 1rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: #f9fafb; text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid #e5e7eb; color: #374151; font-weight: 600; }
+    td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #f3f4f6; color: #4b5563; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fafb; }
+    .kv-table td:first-child { font-weight: 600; color: #374151; width: 200px; }
+    code { background: #f1f5f9; padding: 0.1em 0.4em; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.85em; color: #1e40af; }
+    .alert-card { background: #fff7ed; border-left: 4px solid #f97316; padding: 1rem 1.2rem; margin-bottom: 0.8rem; border-radius: 0 6px 6px 0; }
+    .alert-card h3 { font-size: 1rem; color: #c2410c; }
+    .alert-meta { font-size: 0.83rem; color: #6b7280; margin-top: 0.3rem; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-box { background: #fff; border-radius: 8px; padding: 1.2rem; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .stat-box .num { font-size: 2rem; font-weight: 700; color: #1e2a3a; }
+    .stat-box .label { font-size: 0.8rem; color: #6b7280; margin-top: 0.2rem; }
+    footer { text-align: center; font-size: 0.8rem; color: #9ca3af; margin-top: 2rem; padding: 1rem; }
+    .warning-box { background: #fffbeb; border: 1px solid #f59e0b; border-radius: 6px; padding: 1rem; font-size: 0.88rem; color: #78350f; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>🛡️ Purple Team Simulation Report</h1>
+    <p>Generated: {{ generated_at }} &nbsp;|&nbsp; Run ID: <code style="color:#9ab;background:transparent">{{ run.id }}</code></p>
+  </header>
+
+  <div class="summary-grid">
+    <div class="stat-box">
+      <div class="num">{{ total_logs }}</div>
+      <div class="label">Log Events</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">{{ total_alerts }}</div>
+      <div class="label">Alerts Generated</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">
+        <span class="badge badge-{{ coverage_status }}">{{ coverage_status }}</span>
+      </div>
+      <div class="label">Coverage Status</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Scenario Details</h2>
+    <table class="kv-table">
+      <tr><td>Scenario ID</td><td><code>{{ scenario.id if scenario else 'N/A' }}</code></td></tr>
+      <tr><td>Name</td><td>{{ scenario.name if scenario else 'N/A' }}</td></tr>
+      <tr><td>Platform</td><td>{{ scenario.platform if scenario else 'N/A' }}</td></tr>
+      <tr><td>MITRE Tactic</td><td>{{ scenario.tactic if scenario else 'N/A' }}</td></tr>
+      <tr><td>MITRE Technique</td><td>
+        {% if scenario %}<code>{{ scenario.technique_id }}</code> — {{ scenario.technique_name }}{% else %}N/A{% endif %}
+      </td></tr>
+      <tr><td>Severity</td><td>
+        {% if scenario %}<span class="badge badge-{{ scenario.severity }}">{{ scenario.severity }}</span>{% else %}N/A{% endif %}
+      </td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Simulation Result</h2>
+    <table class="kv-table">
+      <tr><td>Run ID</td><td><code>{{ run.id }}</code></td></tr>
+      <tr><td>Start Time</td><td>{{ run.started_at }}</td></tr>
+      <tr><td>End Time</td><td>{{ run.finished_at if run.finished_at else 'N/A' }}</td></tr>
+      <tr><td>Generated Logs</td><td>{{ total_logs }}</td></tr>
+      <tr><td>Alerts Generated</td><td>{{ total_alerts }}</td></tr>
+      <tr><td>Detection Status</td><td><span class="badge badge-{{ coverage_status }}">{{ coverage_status }}</span></td></tr>
+    </table>
+  </div>
+
+  {% if alerts %}
+  <div class="card">
+    <h2>Alerts ({{ total_alerts }})</h2>
+    {% for alert in alerts %}
+    <div class="alert-card">
+      <h3>{{ alert.title }}</h3>
+      <div class="alert-meta">
+        Rule: <code>{{ alert.rule_id }}</code> &nbsp;|&nbsp;
+        Severity: <span class="badge badge-{{ alert.severity }}">{{ alert.severity }}</span> &nbsp;|&nbsp;
+        MITRE: <code>{{ alert.mitre_technique_id }}</code> ({{ alert.mitre_tactic }})
+      </div>
+      <p style="margin-top:0.5rem; font-size:0.88rem; color:#374151;">{{ alert.reason }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Event Timeline ({{ total_logs }} events)</h2>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Timestamp</th><th>Source</th><th>Event Type</th><th>Host</th><th>User</th><th>Process</th></tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ log.timestamp }}</td>
+          <td>{{ log.source }}</td>
+          <td>{{ log.event_type }}</td>
+          <td>{{ log.host }}</td>
+          <td>{{ log.user }}</td>
+          <td>{{ log.process_name or '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Defensive Recommendations</h2>
+    <ol style="margin-left:1.2rem; font-size:0.9rem; color:#374151; line-height:2;">
+      <li>Enable enhanced logging for <strong>{{ scenario.platform if scenario else 'the relevant platform' }}</strong> to capture these event types.</li>
+      <li>Deploy detection rule <code>{{ scenario.expected_detection if scenario else 'N/A' }}</code> in your SIEM platform.</li>
+      <li>Review alert tuning parameters to minimize false positives while maintaining detection coverage.</li>
+      <li>Schedule regular purple team exercises to validate rule effectiveness over time.</li>
+      <li>Map your current detection coverage against MITRE ATT&CK to identify gaps.</li>
+    </ol>
+  </div>
+
+  <div class="warning-box">
+    ⚠️ <strong>Simulation Notice:</strong> This report is based on entirely synthetic log events.
+    No real attack was executed. All events were generated artificially for detection rule testing
+    in an authorized lab environment only.
+  </div>
+
+  <footer>
+    Purple Team Attack Simulator &nbsp;|&nbsp; Defensive use only &nbsp;|&nbsp; {{ generated_at }}
+  </footer>
+
+</div>
+</body>
+</html>

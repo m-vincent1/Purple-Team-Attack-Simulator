@@ -1,0 +1,24 @@
+id: process_masquerading_rule
+name: Process Name Masquerading via Typosquatting
+description: Detects processes with names that closely resemble legitimate Windows system processes but contain character substitutions.
+severity: high
+enabled: true
+mitre:
+  tactic: Defense Evasion
+  technique_id: T1036
+  technique_name: Masquerading
+logsource:
+  source: windows_security
+  event_type: process_creation
+detection:
+  condition: any
+  fields:
+    process_name:
+      contains:
+        - "svch0st"
+        - "lsas5"
+        - "exp1orer"
+        - "scvhost"
+false_positives:
+  - None expected
+recommendation: Enable process parent/child relationship monitoring. Validate that system processes run from their expected installation paths.
